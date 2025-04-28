@@ -31,6 +31,9 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - sqflite_darwin (0.0.4):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -39,6 +42,7 @@ DEPENDENCIES:
   - openvpn_flutter (from `.symlinks/plugins/openvpn_flutter/ios`)
   - OpenVPNAdapter (from `https://github.com/ss-abramchuk/OpenVPNAdapter.git`, tag `0.7.0`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -59,6 +63,8 @@ EXTERNAL SOURCES:
     :tag: 0.7.0
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  sqflite_darwin:
+    :path: ".symlinks/plugins/sqflite_darwin/darwin"
 
 CHECKOUT OPTIONS:
   OpenVPNAdapter:
@@ -74,6 +80,7 @@ SPEC CHECKSUMS:
   openvpn_flutter: 31bba88d4f9daf1bfba7d11e943f831c442fc1d1
   OpenVPNAdapter: 173fcc4c11a3a8a83ae8d250c079cdc5b9fb8ff1
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
 
 PODFILE CHECKSUM: a293968aae56c132d2d770c0e1693649dad81a58
 

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:openvpn_flutter/openvpn_flutter.dart';
 import 'package:openvpn_flutter_example/core/extensions/context_extension.dart';
 import 'package:openvpn_flutter_example/core/services/injection_container_main.dart';
 import 'package:openvpn_flutter_example/core/services/router/router.dart';
@@ -39,6 +40,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
+// import 'dart:io';
+//
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:openvpn_flutter/openvpn_flutter.dart';
+//
+// void main() {
+//   runApp(MyApp());
+// }
+//
 // class MyApp extends StatefulWidget {
 //   const MyApp({Key? key}) : super(key: key);
 //
@@ -51,93 +65,93 @@ class MyApp extends StatelessWidget {
 //   VpnStatus? status;
 //   String? stage;
 //   bool _granted = false;
-//   // @override
-//   // void initState() {
-//   //   engine = OpenVPN(
-//   //     onVpnStatusChanged: (data) {
-//   //       setState(() {
-//   //         status = data;
-//   //       });
-//   //     },
-//   //     onVpnStageChanged: (data, raw) {
-//   //       setState(() {
-//   //         stage = raw;
-//   //       });
-//   //     },
-//   //   );
-//   //
-//   //   engine.initialize(
-//   //     groupIdentifier: "group.checksum.com.lockScreenWidget",
-//   //     providerBundleIdentifier: "com.vpn.iosapplicationexample.VPNExtension",
-//   //     localizedDescription: "VPN by Nizwar",
-//   //     lastStage: (stage) {
-//   //       setState(() {
-//   //         this.stage = stage.name;
-//   //       });
-//   //     },
-//   //     lastStatus: (status) {
-//   //       setState(() {
-//   //         this.status = status;
-//   //       });
-//   //     },
-//   //   );
-//   //   super.initState();
-//   // }
-//   //
-//   // Future<void> initPlatformState() async {
-//   //   engine.connect(
-//   //     await rootBundle.loadString('assets/test_file.ovpn'),
-//   //     "USA",
-//   //     username: defaultVpnUsername,
-//   //     password: defaultVpnPassword,
-//   //     certIsRequired: true,
-//   //   );
-//   //   if (!mounted) return;
-//   // }
+//
+//   @override
+//   void initState() {
+//     engine = OpenVPN(
+//       onVpnStatusChanged: (data) {
+//         setState(() {
+//           status = data;
+//         });
+//       },
+//       onVpnStageChanged: (data, raw) {
+//         setState(() {
+//           stage = raw;
+//         });
+//       },
+//     );
+//
+//     engine.initialize(
+//       groupIdentifier: "group.checksum.com.lockScreenWidget",
+//       providerBundleIdentifier: "com.vpn.iosapplicationexample.VPNExtension",
+//       localizedDescription: "VPN by Nizwar",
+//       lastStage: (stage) {
+//         setState(() {
+//           this.stage = stage.name;
+//         });
+//       },
+//       lastStatus: (status) {
+//         setState(() {
+//           this.status = status;
+//         });
+//       },
+//     );
+//     super.initState();
+//   }
+//
+//   Future<void> initPlatformState() async {
+//     await engine.connect(
+//       await rootBundle.loadString('assets/animations/connect.ovpn'),
+//       "USA",
+//       username: defaultVpnUsername,
+//       password: defaultVpnPassword,
+//       certIsRequired: true,
+//     );
+//     if (!mounted) return;
+//   }
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     return const MaterialApp(home: MapSample()
-//
-//         // Scaffold(
-//         //   appBar: AppBar(
-//         //     title: const Text('Plugin example app'),
-//         //   ),
-//         //   body: Center(
-//         //     child: Column(
-//         //       mainAxisSize: MainAxisSize.min,
-//         //       children: [
-//         //         Text(stage?.toString() ?? VPNStage.disconnected.toString()),
-//         //         Text(status?.toJson().toString() ?? ""),
-//         //         TextButton(
-//         //           child: const Text("Start"),
-//         //           onPressed: () {
-//         //             // APIs.getVPNServers();
-//         //             initPlatformState();
-//         //           },
-//         //         ),
-//         //         TextButton(
-//         //           child: const Text("STOP"),
-//         //           onPressed: () {
-//         //             engine.disconnect();
-//         //           },
-//         //         ),
-//         //         if (Platform.isAndroid)
-//         //           TextButton(
-//         //             child: Text(_granted ? "Granted" : "Request Permission"),
-//         //             onPressed: () {
-//         //               engine.requestPermissionAndroid().then((value) {
-//         //                 setState(() {
-//         //                   _granted = value;
-//         //                 });
-//         //               });
-//         //             },
-//         //           ),
-//         //       ],
-//         //     ),
-//         //   ),
-//         // ),
-//         );
+//     // Wrap your Scaffold with MaterialApp
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: const Text('Plugin example app'),
+//         ),
+//         body: Center(
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text(stage?.toString() ?? VPNStage.disconnected.toString()),
+//               Text(status?.toJson().toString() ?? ""),
+//               TextButton(
+//                 child: const Text("Start"),
+//                 onPressed: () {
+//                   initPlatformState();
+//                 },
+//               ),
+//               TextButton(
+//                 child: const Text("STOP"),
+//                 onPressed: () {
+//                   engine.disconnect();
+//                 },
+//               ),
+//               if (Platform.isAndroid)
+//                 TextButton(
+//                   child: Text(_granted ? "Granted" : "Request Permission"),
+//                   onPressed: () {
+//                     engine.requestPermissionAndroid().then((value) {
+//                       setState(() {
+//                         _granted = value;
+//                       });
+//                     });
+//                   },
+//                 ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
 //   }
 // }
 //

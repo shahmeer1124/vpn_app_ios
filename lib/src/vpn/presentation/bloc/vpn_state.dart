@@ -15,6 +15,9 @@ class VpnStateHolder extends Equatable {
     this.userCurrentLong = 0.0,
     this.vpnList = const [],
     this.selectedVpn = const Vpn.empty(),
+    this.vpnStage = 'disconnected',
+    this.vpnStatus,
+    this.isAndroidPermissionGranted = false,
   });
   final FetchingIpAp fetchingIpAp;
   final FetchingAvailableServers fetchingAvailableServers;
@@ -23,6 +26,9 @@ class VpnStateHolder extends Equatable {
   final double userCurrentLong;
   final List<Vpn> vpnList;
   final Vpn selectedVpn;
+  final String vpnStage;
+  final VpnStatus? vpnStatus;
+  final bool isAndroidPermissionGranted;
 
   VpnStateHolder copyWith({
     FetchingIpAp? fetchingIpApi,
@@ -32,17 +38,25 @@ class VpnStateHolder extends Equatable {
     double? userCurrentLong,
     List<Vpn>? vpnList,
     Vpn? selectedVpn,
+    String? vpnStage,
+    VpnStatus? vpnStatus,
+    bool? isAndroidPermissionGranted,
   }) {
     return VpnStateHolder(
-        fetchingIpAp: fetchingIpApi ?? fetchingIpAp,
-        fetchingAvailableServers:
-            fetchingAvailableServers ?? this.fetchingAvailableServers,
-        fetchingInternetStatus:
-            fetchingInternetStatus ?? this.fetchingInternetStatus,
-        userCurrentLat: userCurrentLat ?? this.userCurrentLat,
-        userCurrentLong: userCurrentLong ?? this.userCurrentLong,
-        vpnList: vpnList ?? this.vpnList,
-        selectedVpn: selectedVpn ?? this.selectedVpn);
+      fetchingIpAp: fetchingIpApi ?? fetchingIpAp,
+      fetchingAvailableServers:
+          fetchingAvailableServers ?? this.fetchingAvailableServers,
+      fetchingInternetStatus:
+          fetchingInternetStatus ?? this.fetchingInternetStatus,
+      userCurrentLat: userCurrentLat ?? this.userCurrentLat,
+      userCurrentLong: userCurrentLong ?? this.userCurrentLong,
+      vpnList: vpnList ?? this.vpnList,
+      selectedVpn: selectedVpn ?? this.selectedVpn,
+      vpnStage: vpnStage ?? this.vpnStage,
+      vpnStatus: vpnStatus ?? this.vpnStatus,
+      isAndroidPermissionGranted:
+          isAndroidPermissionGranted ?? this.isAndroidPermissionGranted,
+    );
   }
 
   @override
@@ -53,6 +67,9 @@ class VpnStateHolder extends Equatable {
         userCurrentLat,
         userCurrentLong,
         vpnList,
-        selectedVpn
+        selectedVpn,
+        vpnStage,
+        vpnStatus,
+        isAndroidPermissionGranted,
       ];
 }
