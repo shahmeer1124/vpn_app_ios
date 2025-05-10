@@ -44,8 +44,6 @@ class _ContactUsState extends State<ContactUsPage> {
           textColor: Colors.white,
           cardColor:Colors.white.withValues(alpha: 0.5),
           dividerColor: Colors.white,
-
-
           companyColor: Colors.white,
           taglineColor: Colors.white,
         ),
