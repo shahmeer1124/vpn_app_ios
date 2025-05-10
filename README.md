@@ -1,4 +1,4 @@
-# FLUTTER COMPLETE WORKING VPN APP FOR IOS
+# FLUTTER VPN APP FOR IOS
 
 i am using vpn gate free vpn servers to connect with i integrated google map to show the user location fetching that location using ip-api 
 you just have to enable google maps api in your google cloud console and get the api key paste that key in ios/runner/appDelegate in this line  GMSServices.provideAPIKey("paste your key here").
