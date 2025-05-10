@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:openvpn_flutter_example/src/network_info/presentation/view/network_info_view.dart';
+import 'package:openvpn_flutter_example/src/speed_test/presentation/views/speed_test_main.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/bloc/vpn_bloc.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/cubit/map_cubit.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/view/app_main_screen.dart';
@@ -15,6 +16,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           child: const VpnMainView(),
         ),
       );
+    case SpeedTestScreen.routeName:
+      return CupertinoPageRoute(
+        builder: (context) => const SpeedTestScreen(),
+      );
+    case NetworkInfoScreen.routeName:
+      return CupertinoPageRoute(
+        builder: (context) => const NetworkInfoScreen(),
+      );
+
 
     default:
       return _pageBuilder(
@@ -34,9 +44,9 @@ PageRouteBuilder<dynamic> _pageBuilder(
     settings: settings,
     pageBuilder: (context, _, __) => page(context),
     transitionsBuilder: (context, _, __, child) {
-      const begin = Offset(1, 0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
+      // const begin = Offset(1, 0);
+      // const end = Offset.zero;
+      // const curve = Curves.ease;
 
       // final tween =
       //     Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -58,7 +68,8 @@ PageRouteBuilder<dynamic> _pageBuilder(
 //     });
 //   }
 //
-//   static void methodForPopAndPushNavigation(int index, BuildContext context) {
+//   static void methodForPopAndPushNavigation(int index,
+//   BuildContext context) {
 //     Future.delayed(Duration.zero, () {
 //       Navigator.of(context).popAndPushNamed(NavigationRoutes.paths[index]);
 //     });

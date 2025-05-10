@@ -27,7 +27,65 @@ class TestEvent extends VpnEvent {
 class ChangeSelectedVpn extends VpnEvent {
   const ChangeSelectedVpn({required this.vpnNewModel});
   final Vpn vpnNewModel;
-
   @override
   List<Object?> get props => [vpnNewModel];
+}
+
+class InitializeVpn extends VpnEvent {
+  const InitializeVpn({this.openVpn});
+  final OpenVPN? openVpn;
+  @override
+  List<Object?> get props => [openVpn];
+}
+
+class ConnectVpn extends VpnEvent {
+  const ConnectVpn({required this.context, this.openVpn});
+  final BuildContext context;
+  final OpenVPN? openVpn;
+  @override
+  List<Object?> get props => [context, openVpn];
+}
+
+class DisconnectVpn extends VpnEvent {
+  const DisconnectVpn({this.openVpn});
+  final OpenVPN? openVpn;
+  @override
+  List<Object?> get props => [openVpn];
+}
+
+class RequestAndroidPermission extends VpnEvent {
+  const RequestAndroidPermission({this.openVpn});
+  final OpenVPN? openVpn;
+  @override
+  List<Object?> get props => [openVpn];
+}
+
+class VpnStageUpdated extends VpnEvent {
+  const VpnStageUpdated(this.stage);
+  final String stage;
+  @override
+  List<Object?> get props => [stage];
+}
+
+class VpnStatusUpdated extends VpnEvent {
+  const VpnStatusUpdated(this.status);
+  final VpnStatus status;
+  @override
+  List<Object?> get props => [status];
+}
+
+class SelectSmartServer extends VpnEvent {
+  const SelectSmartServer({required this.context});
+  final BuildContext context;
+  @override
+  List<Object?> get props => [context];
+}
+
+class ChangeHotelFilter extends VpnEvent {
+  const ChangeHotelFilter({required this.filterType, this.hoteName});
+  final FilterType filterType;
+  final String? hoteName;
+
+  @override
+  List<Object?> get props => [filterType, hoteName];
 }

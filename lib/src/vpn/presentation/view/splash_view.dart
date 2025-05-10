@@ -30,17 +30,7 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return
-
-        //   Container(
-        //   height: context.height,
-        //   width: context.width,
-        //   child: Center(
-        //     child: CustomMarkerWidget(),
-        //   ),
-        // );
-
-        BlocConsumer<VpnBloc, VpnStateHolder>(
+    return BlocConsumer<VpnBloc, VpnStateHolder>(
       listenWhen: (prev, current) {
         return (current.fetchingIpAp == FetchingIpAp.fetched &&
                 prev.fetchingIpAp != FetchingIpAp.fetched) ||

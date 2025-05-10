@@ -16,19 +16,33 @@ abstract class VpnDataSource {
 class VpnDataSrcImpl implements VpnDataSource {
   @override
   Future<IpDetailModel> getUserLocation() async {
+    print('get user location called');
     final uri = Uri.parse(UrlSavePlace.apiIpUrl);
     try {
-      final response = await get(uri);
+      final response = await get(uri).timeout(
+        const Duration(seconds: 3),
+        onTimeout: () {
+          throw const ServerException(
+            message: 'Server timed out after 5 seconds',
+            statusCode: '408',
+          );
+        },
+      );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return IpDetailModel.fromJson(data as DataMap);
       } else {
         throw const ServerException(
-            message: 'Server is not accessible', statusCode: '404');
+          message: 'Server is not accessible',
+          statusCode: '404',
+        );
       }
     } catch (e) {
+      if (e is ServerException) rethrow;
       throw const ServerException(
-          message: 'Server is not accessible', statusCode: '404');
+        message: 'Server is not accessible',
+        statusCode: '404',
+      );
     }
   }
 
