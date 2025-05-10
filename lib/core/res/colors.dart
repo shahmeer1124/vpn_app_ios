@@ -24,6 +24,8 @@ class ColorsConstants {
   static const Color primaryColor = Color(0xFF5D68F8);
   static const Color sidePanelBackColor = Color(0xFF333334);
   static const Color sidePanelChildColor = Color(0xFF4B4848);
+  static const Color purpleColor = Color(0xFF691D99);
+  static const Color kindOfBlue = Color(0xFF2f22E9);
   static Color mainBodyBgColor = const Color(0xFF1C1B21).withOpacity(0.9);
 }
 

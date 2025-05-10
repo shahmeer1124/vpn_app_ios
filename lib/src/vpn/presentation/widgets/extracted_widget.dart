@@ -6,6 +6,7 @@ import 'package:openvpn_flutter_example/core/extensions/context_extension.dart';
 import 'package:openvpn_flutter_example/core/res/colors.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/bloc/vpn_bloc.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/widgets/avl_server_list.dart';
+import 'package:openvpn_flutter_example/src/vpn/presentation/widgets/blinking_text_widget.dart';
 import 'package:uicons_pro/uicons_pro.dart';
 
 class LeftColumnText extends StatelessWidget {
@@ -144,12 +145,6 @@ class SelectedServerInfoTile extends StatelessWidget {
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                         ),
-
-                        // Image.network(
-                        //   'https://flagsapi.com/${state.selectedVpn.countryShort}/shiny/64.png',
-                        //   fit: BoxFit
-                        //       .cover, // Ensure image fills the container
-                        // ),
                       ),
                     ),
                   ),
@@ -227,7 +222,14 @@ class SelectedServerInfoTile extends StatelessWidget {
                 angle: -1.55,
                 child: Transform.scale(
                   scale: 1.2,
-                  child: CupertinoSwitch(value: false, onChanged: (val) {}),
+                  child: CupertinoSwitch(
+                      value: state.smartestServerSelection ==
+                          SmartestServerSelection.connected,
+                      onChanged: (val) {
+                        context
+                            .read<VpnBloc>()
+                            .add(SelectSmartServer(context: context));
+                      }),
                 ),
               ),
               Column(
@@ -254,18 +256,24 @@ class SelectedServerInfoTile extends StatelessWidget {
 }
 
 class ConstAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ConstAppBar({super.key, required this.state});
+  const ConstAppBar(
+      {super.key, required this.state, required this.methodToOpenDrawer});
   final VpnStateHolder state;
+  final VoidCallback methodToOpenDrawer;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       centerTitle: false,
-      leading: Icon(
-        UIconsPro.solidRounded.menu_burger,
-        color: ColorsConstants.mainBodyBgColor,
-        size: 25,
+      leading: CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: methodToOpenDrawer,
+        child: Icon(
+          UIconsPro.solidRounded.menu_burger,
+          color: ColorsConstants.mainBodyBgColor,
+          size: 25,
+        ),
       ),
       title: BlocBuilder<VpnBloc, VpnStateHolder>(
         builder: (context, state) {
@@ -283,19 +291,34 @@ class ConstAppBar extends StatelessWidget implements PreferredSizeWidget {
         BlocBuilder<VpnBloc, VpnStateHolder>(
           builder: (context, state) {
             bool isConnected = state.vpnStage.toLowerCase() == 'connected';
+            bool isConnecting = state.vpnStage.toLowerCase() == 'connecting';
             return Row(
               children: [
                 Text(
                   state.vpnStage.toUpperCase(),
-                  style: appstyle(13, isConnected ? Colors.green : Colors.red,
+                  style: appstyle(
+                      13,
+                      isConnecting
+                          ? Colors.yellow
+                          : isConnected
+                              ? Colors.green
+                              : Colors.red,
                       FontWeight.w700),
                 ),
                 const SizedBox(
                   width: 3,
                 ),
                 Icon(
-                  isConnected ? Icons.security : CupertinoIcons.nosign,
-                  color: isConnected ? Colors.green : Colors.red,
+                  isConnecting
+                      ? UIconsPro.solidRounded.plug_connection
+                      : isConnected
+                          ? Icons.security
+                          : CupertinoIcons.nosign,
+                  color: isConnecting
+                      ? Colors.yellow
+                      : isConnected
+                          ? Colors.green
+                          : Colors.red,
                   size: 15,
                 ),
                 const SizedBox(
@@ -311,4 +334,63 @@ class ConstAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(50);
+}
+
+class LocationTrackableBlink extends StatelessWidget {
+  const LocationTrackableBlink({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<VpnBloc, VpnStateHolder>(
+      builder: (context, state) {
+        return Visibility(
+          visible: state.fetchingIpAp == FetchingIpAp.error,
+          maintainAnimation: false,
+          maintainSize: false,
+          maintainState: false,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, right: 25, top: 10),
+              child: BlinkingText(
+                'Your location appears only if the VPN server is detectable.',
+                style: appstyle(12, Colors.red, FontWeight.w700),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ServerUnReachBlinkText extends StatelessWidget {
+  const ServerUnReachBlinkText({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<VpnBloc, VpnStateHolder>(
+      builder: (context, state) {
+        return Visibility(
+          visible:
+              state.showServerIsSlowMessage == ShowServerIsSlowMessage.show,
+          maintainAnimation: false,
+          maintainSize: false,
+          maintainState: false,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, right: 25, top: 10),
+              child: BlinkingText(
+                'Server unreachable or experiencing high traffic. Please try another server.',
+                style: appstyle(12, Colors.red, FontWeight.w700),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

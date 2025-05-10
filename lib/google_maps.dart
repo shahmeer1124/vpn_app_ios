@@ -31,21 +31,17 @@ class MapSampleState extends State<MapSample> {
       body: GoogleMap(
         mapType: MapType.terrain,
         initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: Set<Marker>.of(
-          <Marker>[
-            const Marker(
-              markerId: MarkerId('marker_1'),
-              position: LatLng(37.43296265331129, -122.08832357078792),
-              infoWindow: InfoWindow(
-                title: 'My Location',
-                snippet: 'This is my location',
-              ),
+        onMapCreated: _controller.complete,
+        markers: <Marker>{
+          const Marker(
+            markerId: MarkerId('marker_1'),
+            position: LatLng(37.43296265331129, -122.08832357078792),
+            infoWindow: InfoWindow(
+              title: 'My Location',
+              snippet: 'This is my location',
             ),
-          ],
-        ),
+          ),
+        },
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToTheLake,

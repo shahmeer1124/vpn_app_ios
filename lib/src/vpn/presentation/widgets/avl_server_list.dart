@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:openvpn_flutter_example/core/res/colors.dart';
+import 'package:openvpn_flutter_example/src/vpn/presentation/bloc/filter_function.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/bloc/vpn_bloc.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/view/splash_view.dart';
 import 'package:openvpn_flutter_example/src/vpn/presentation/widgets/extracted_widget.dart';
@@ -22,40 +24,19 @@ class _CountryMenuButtonState extends State<CountryMenuButton>
   Animation<double>? _scaleAnimation;
   Animation<double>? _fadeAnimation;
 
-  final List<String> countries = [
-    'USA',
-    'Canada',
-    'India',
-    'Germany',
-    'Japan',
-    'Brazil',
-    'Australia',
-    'France',
-    'China',
-    'Russia',
-    'Mexico',
-    'Italy',
-    'Spain',
-    'South Korea',
-    'Argentina'
-  ];
-
   @override
   void initState() {
     super.initState();
-    // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 350), // Smooth duration
     );
-    // Define scale animation (from tiny to full size)
     _scaleAnimation = Tween<double>(
       begin: 0.1, // Start very small
       end: 1.0, // Full size
     ).animate(
       CurvedAnimation(parent: _animationController!, curve: Curves.decelerate),
     );
-    // Define fade animation
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -90,7 +71,7 @@ class _CountryMenuButtonState extends State<CountryMenuButton>
           Positioned(
             left: buttonPosition.dx,
             top: buttonPosition.dy -
-                200 -
+                300 -
                 8, // Fixed height + offset above button
             child: FadeTransition(
               opacity: _fadeAnimation!,
@@ -103,8 +84,8 @@ class _CountryMenuButtonState extends State<CountryMenuButton>
                   elevation: 4,
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
-                    width: 170,
-                    height: 200, // Fixed height for the menu
+                    width: 180,
+                    height: 300, // Fixed height for the menu
                     decoration: BoxDecoration(
                       color: ColorsConstants.mainBodyBgColor,
                       borderRadius: BorderRadius.circular(15),
@@ -113,101 +94,156 @@ class _CountryMenuButtonState extends State<CountryMenuButton>
                       borderRadius: BorderRadius.circular(15),
                       child: SingleChildScrollView(
                         child: Column(
-                          children: widget.vpnStateHolder.vpnList
-                              .map((country) => CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    minSize: 0,
-                                    onPressed: () {
-                                      dispatchVpnEvent(
-                                        context,
-                                        ChangeSelectedVpn(
-                                          vpnNewModel: country,
-                                        ),
-                                      );
-                                      _toggleMenu();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 5, right: 5),
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            color: Colors.white
-                                                .withValues(alpha: 0.2),
-                                            width: 1,
-                                          ),
-                                        ),
+                          children: [
+                            BlocBuilder<VpnBloc, VpnStateHolder>(
+                              builder: (context, state) {
+                                return Container(
+                                  height: 42,
+                                  width: 180,
+                                  color: ColorsConstants.mainBodyBgColor,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      FilterTypeWid(
+                                        state: state,
+                                        filterType: FilterType.name, icon: Icons.abc,
                                       ),
-                                      height: 50,
-                                      child: Row(
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(right: 5),
-                                            child: Icon(
-                                              CupertinoIcons.globe,
-                                              color: Colors.green,
+                                      FilterTypeWid(
+                                        state: state,
+                                        filterType: FilterType.lowestPing, icon: CupertinoIcons.wifi,
+                                      ),
+                                      FilterTypeWid(
+                                        state: state,
+                                        filterType: FilterType.fastestSpeed, icon: UIconsPro.solidRounded.internet_speed_wifi,
+                                      ),
+                                      FilterTypeWid(
+                                        state: state,
+                                        filterType:
+                                            FilterType.lowestConnections, icon: UIconsPro.solidRounded.plug_connection,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            BlocBuilder<VpnBloc, VpnStateHolder>(
+                              builder: (context, state) {
+                                return Column(
+                                  children: state.vpnList
+                                      .map((country) => CupertinoButton(
+                                            padding: EdgeInsets.zero,
+                                            minSize: 0,
+                                            onPressed: () {
+                                              dispatchVpnEvent(
+                                                context,
+                                                ChangeSelectedVpn(
+                                                  vpnNewModel: country,
+                                                ),
+                                              );
+                                              _toggleMenu();
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5, right: 5),
+                                              decoration: BoxDecoration(
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.2),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                              ),
+                                              height: 50,
+                                              child: Row(
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 5),
+                                                    child: Icon(
+                                                      CupertinoIcons.globe,
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      LeftColumnText(
+                                                        text: country
+                                                            .countryShort,
+                                                        color: Colors.white,
+                                                        fontSize: 10,
+                                                      ),
+                                                      LeftColumnText(
+                                                        text: country.ip,
+                                                        color: Colors.white
+                                                            .withValues(
+                                                                alpha: 0.5),
+                                                        fontSize: 8,
+                                                      ),
+                                                      LeftColumnText(
+                                                        text: country.hostname,
+                                                        color:
+                                                            Colors.blueAccent,
+                                                        fontSize: 8,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const Expanded(
+                                                      child: SizedBox()),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      StatusRow(
+                                                        icon:
+                                                            CupertinoIcons.wifi,
+                                                        value:
+                                                            '${country.ping} ms',
+                                                        color: getPingColor(
+                                                            country.ping),
+                                                      ),
+                                                      StatusRow(
+                                                        icon: UIconsPro
+                                                            .solidRounded
+                                                            .internet_speed_wifi,
+                                                        value:
+                                                            '${(country.speed / 1000000).toStringAsFixed(0)} Mbps',
+                                                        color: getSpeedColor(
+                                                            country.speed /
+                                                                1000000),
+                                                      ),
+                                                      StatusRow(
+                                                        icon: UIconsPro
+                                                            .solidRounded
+                                                            .plug_connection,
+                                                        value:
+                                                            '${country.numVpnSessions}',
+                                                        color: getSessionsColor(
+                                                            country
+                                                                .numVpnSessions),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              LeftColumnText(
-                                                text: country.countryShort,
-                                                color: Colors.white,
-                                                fontSize: 10,
-                                              ),
-                                              LeftColumnText(
-                                                text: country.ip,
-                                                color: Colors.white
-                                                    .withValues(alpha: 0.5),
-                                                fontSize: 8,
-                                              ),
-                                              LeftColumnText(
-                                                text: country.hostname,
-                                                color: Colors.blueAccent,
-                                                fontSize: 8,
-                                              ),
-                                            ],
-                                          ),
-                                          const Expanded(child: SizedBox()),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              StatusRow(
-                                                icon: CupertinoIcons.wifi,
-                                                value: '${country.ping} ms',
-                                                color:
-                                                    getPingColor(country.ping),
-                                              ),
-                                              StatusRow(
-                                                icon: UIconsPro.solidRounded
-                                                    .internet_speed_wifi,
-                                                value:
-                                                    '${(country.speed / 1000000).toStringAsFixed(0)} Mbps',
-                                                color: getSpeedColor(
-                                                    country.speed / 1000000),
-                                              ),
-                                              StatusRow(
-                                                icon: UIconsPro.solidRounded
-                                                    .plug_connection,
-                                                value:
-                                                    '${country.numVpnSessions}',
-                                                color: getSessionsColor(
-                                                    country.numVpnSessions),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
+                                          ))
+                                      .toList(),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -261,6 +297,55 @@ class _CountryMenuButtonState extends State<CountryMenuButton>
             color: Colors.white,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class FilterTypeWid extends StatelessWidget {
+  const FilterTypeWid({
+    required this.state,
+    required this.filterType,
+    required this.icon,
+    super.key,
+  });
+  final VpnStateHolder state;
+  final FilterType filterType;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 35,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: 17,
+            child: Checkbox(
+              activeColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    5,
+                  ),
+                ),
+                side: const BorderSide(
+                  width: 1.5,
+                  color: Colors.green,
+                ),
+                value: state.filterType == filterType,
+                onChanged: (val) {
+                  context.read<VpnBloc>().add(
+                        ChangeHotelFilter(filterType: filterType),
+                      );
+                }),
+          ),
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 13,
+          )
+        ],
       ),
     );
   }

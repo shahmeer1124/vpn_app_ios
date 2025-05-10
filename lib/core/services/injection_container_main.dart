@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:get_it/get_it.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:openvpn_flutter/openvpn_flutter.dart';
+import 'package:openvpn_flutter_example/src/network_info/presentation/cubit/network_info_cubit.dart';
 import 'package:openvpn_flutter_example/src/vpn/data/data_source/vpn_datasource.dart';
 import 'package:openvpn_flutter_example/src/vpn/data/repos/vpn_repo_impl.dart';
 import 'package:openvpn_flutter_example/src/vpn/domain/repos/vpn_repo.dart';
@@ -29,6 +31,7 @@ class VpnEventBus {
 
 Future<void> init() async {
   await _initVpnBloc();
+  await _initNetworkInfo();
 }
 
 Future<void> _initVpnBloc() async {
@@ -41,6 +44,7 @@ Future<void> _initVpnBloc() async {
         getUserLocationUseCase: sl(),
         openVpn: sl(),
         eventBus: sl(),
+        advancedDrawerController: sl(),
       ),
     )
     ..registerLazySingleton(() => GetAvailableServerListUseCase(sl()))
@@ -52,19 +56,24 @@ Future<void> _initVpnBloc() async {
     ..registerLazySingleton<OpenVPN>(
       () => OpenVPN(
         onVpnStatusChanged: (status) {
-          print('i am the first one$status');
           if (status != null) {
             try {
               sl<VpnEventBus>().updateStatus(status);
-            } catch (e) {
-              print('this is erro$e');
-            }
+            } catch (e) {}
           }
         },
         onVpnStageChanged: (stage, raw) {
-          print('i am the second one$stage');
           sl<VpnEventBus>().updateStage(raw);
         },
       ),
-    );
+    )
+    ..registerLazySingleton(AdvancedDrawerController.new);
 }
+
+Future<void> _initNetworkInfo() async {
+  sl
+    ..registerLazySingleton<NetworkInfo>(NetworkInfo.new)
+    ..registerFactory(() => NetworkInfoCubit(sl()));
+}
+
+

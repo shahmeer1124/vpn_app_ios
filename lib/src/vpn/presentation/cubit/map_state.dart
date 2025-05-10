@@ -5,6 +5,7 @@ class MapState extends Equatable {
     required this.cameraPosition,
     required this.markers,
   });
+
   factory MapState.initial({
     required double latitude,
     required double longitude,
@@ -15,7 +16,7 @@ class MapState extends Equatable {
     );
 
     final initialMarker = Marker(
-      markerId: const MarkerId('initial_position'),
+      markerId: const MarkerId('current_position'),
       position: LatLng(latitude, longitude),
       infoWindow: const InfoWindow(
         title: 'Your Location',
@@ -28,6 +29,7 @@ class MapState extends Equatable {
       markers: {initialMarker},
     );
   }
+
   final CameraPosition cameraPosition;
   final Set<Marker> markers;
 
